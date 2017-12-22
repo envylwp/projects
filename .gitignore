@@ -1,13 +1,18 @@
-
-.gitignore
-.idea/compiler.xml
-.idea/inspectionProfiles/
-.idea/misc.xml
-.idea/modules.xml
-.idea/sbt.xml
-.idea/workspace.xml
-pom.xml
-projects.iml
-src/
+# Lines that start with '#' are comments.
+*~
+*.diff
+*#
+.classpath
+.project
+.settings
+bin/.settings
+.eclipse
+pmd_report.html
+*/bin
+target
+patchprocess
+.idea
+*.iml
+*/target
 
 
