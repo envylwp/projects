@@ -12,5 +12,6 @@
     <modules>
         <module>concurrent</module>
         <module>kafka</module>
+        <module>spark13</module>
     </modules>
 </project>
