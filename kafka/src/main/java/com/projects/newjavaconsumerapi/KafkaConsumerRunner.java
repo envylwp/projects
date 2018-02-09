@@ -54,7 +54,7 @@ public class KafkaConsumerRunner implements Runnable {
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-        consumer.subscribe(Arrays.asList("test02_topic"));
+        consumer.subscribe(Arrays.asList("test_ts2_topic"));
         final int minBatchSize = 200;
         List<ConsumerRecord<String, String>> buffer = new ArrayList<ConsumerRecord<String, String>>();
         while (true) {
@@ -62,6 +62,8 @@ public class KafkaConsumerRunner implements Runnable {
             for (ConsumerRecord<String, String> record : records) {
                 buffer.add(record);
                 System.out.println(record.key());
+                System.out.println(record.timestamp());
+                System.out.println(record.timestampType());
                 System.out.println(record.value());
             }
             if (buffer.size() >= minBatchSize) {
