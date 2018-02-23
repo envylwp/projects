@@ -14,7 +14,7 @@ object WordCountSparkSession {
          .getOrCreate()
 
 
-    val df = spark.read.json("spark13\\src\\main\\resources\\people.json")
+    val df = spark.read.textFile("spark13\\src\\main\\resources\\wc.txxt")
     df.show()
 
     spark.stop()
