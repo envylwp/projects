@@ -24,20 +24,18 @@ object ReadingData {
 
     println("------------------------------write------------------------------------")
 
-    /**
+//
+//
+//      DataFrameWriter.format(...).option(...).partitionBy(...).bucketBy(...).sortBy(
+//      ...).save()
+//
+//    dataframe.write.format("csv")
+//      .option("mode","OVERWRITE")
+//      .option("dateFormat","yyyy-MM-dd")
+//      .option("path","path/to/file(s)")
+//      .save()
 
-      DataFrameWriter.format(...).option(...).partitionBy(...).bucketBy(...).sortBy(
-      ...).save()
 
-    dataframe.write.format("csv")
-      .option("mode","OVERWRITE")
-      .option("dateFormat","yyyy-MM-dd")
-      .option("path","path/to/file(s)")
-      .save()
-
-
-      *
-      * /
 
 
   }
