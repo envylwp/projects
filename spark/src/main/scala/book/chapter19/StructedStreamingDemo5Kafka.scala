@@ -1,5 +1,6 @@
 package book.chapter19
 
+import com.kafkaToSparkToCass.Commons
 import org.apache.spark.sql.{ForeachWriter, SparkSession}
 
 object StructedStreamingDemo5Kafka {
@@ -48,6 +49,7 @@ object StructedStreamingDemo5Kafka {
     val writer = new ForeachWriter[String]{
       def open(partitionId:Long,version:Long):Boolean={
         // open a database connection
+        false
       }
       def process(record:String)={
         // write string to connection
@@ -56,6 +58,7 @@ object StructedStreamingDemo5Kafka {
         // close the connection
       }
     }
+
 
 
   }
