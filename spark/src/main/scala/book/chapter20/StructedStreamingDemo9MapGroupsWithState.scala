@@ -55,24 +55,24 @@ object StructedStreamingDemo9MapGroupsWithState {
       state
     }
 
-    import org.apache.spark.sql.streaming.{GroupStateTimeout,OutputMode,GroupState}
-    def updateAcrossEvents(user:String,
-      inputs:Iterator[InputRow],
-      oldState:GroupState[UserState]):UserState={
-      var state:UserState=if(oldState.exists)oldState.getelseUserState(user,
-        "",
-        new java.sql.Timestamp(6284160000000L),
-        new java.sql.Timestamp(6284160L)
-      )
-      // we simply specify an old date that we can compare against and
-      // immediately update based on the values in our data
-
-      for(input<-inputs){
-        state=updateUserStateWithEvent(state,input)
-        oldState.update(state)
-      }
-      state
-    }
+//    import org.apache.spark.sql.streaming.{GroupStateTimeout,OutputMode,GroupState}
+//    def updateAcrossEvents(user:String,
+//      inputs:Iterator[InputRow],
+//      oldState:GroupState[UserState]):UserState={
+//      var state:UserState=if(oldState.exists)oldState.getelseUserState(user,
+//        "",
+//        new java.sql.Timestamp(6284160000000L),
+//        new java.sql.Timestamp(6284160L)
+//      )
+//      // we simply specify an old date that we can compare against and
+//      // immediately update based on the values in our data
+//
+//      for(input<-inputs){
+//        state=updateUserStateWithEvent(state,input)
+//        oldState.update(state)
+//      }
+//      state
+//    }
 
   }
 }
