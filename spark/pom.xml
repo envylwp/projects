@@ -66,6 +66,14 @@
             <version>2.0.5</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.flume/flume-ng-core -->
+        <dependency>
+            <groupId>org.apache.flume</groupId>
+            <artifactId>flume-ng-core</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
+
     </dependencies>
 
 
