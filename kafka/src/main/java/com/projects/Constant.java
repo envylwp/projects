@@ -8,4 +8,5 @@ public class Constant {
     public static final String KAFAK_BROKER = "192.168.18.101:9092,192.168.18.102:9092,192.168.18.103:9092";
     public static final String KAFKA_CLUSTER_IP = "192.168.18.101,192.168.18.102,192.168.18.103";
     public static final String TEST_101 = "test101";
+    public static final String TEST_88 = "test88";
 }
