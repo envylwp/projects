@@ -88,6 +88,7 @@ object PvuvDemo3Window {
 
     val event = result.as[PVUVEvent]
     event.show(10, false)
+
     event.foreach(event => {
       println(s"${event.exec_hhmm}, ${event.exec_date},${event.bus_type},${event.domain},${event.pv},${event.uv},${event.etl_time}")
     })

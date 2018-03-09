@@ -18,18 +18,21 @@ object KafkaSource {
       .readStream
       .format("kafka")
       .option("kafka.bootstrap.servers", "10.1.50.122:9092,10.1.50.123:9092,10.1.50.124:9092")
-      .option("subscribe", "lancer_test2_topic")
+      .option("subscribe", "lancer_test_clickstream_topic")
       .load()
-      .selectExpr("CAST(value AS STRING)")
-      .as[String]
+      //      .selectExpr("CAST(value AS STRING)")
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)", "topic", "partition", "offset", "timestamp", "timestampType")
+      .as[(String, String, String, String, String, String, String)]
+
+    println(lines.schema)
 
     // Generate running word count
-    val wordCounts = lines.flatMap(_.split(" ")).groupBy("value").count()
+    //    val wordCounts = lines.flatMap(_.split(" ")).groupBy("value").count()
 
     // Start running the query that prints the running counts to the console
-    val query = wordCounts.writeStream
-      .outputMode("complete")
-      .option("checkpointLocation","/mnt/disk/data/checkpoint/")
+    val query = lines.writeStream
+      .outputMode("append")
+      //      .option("checkpointLocation","/mnt/disk/data/checkpoint/")
       .format("console")
       .start()
 
