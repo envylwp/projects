@@ -1,13 +1,18 @@
 package structedstreaming
 
 import org.apache.spark.sql.SparkSession
+import sink.TestSink
 
 object NetWordCountOffical {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder
       .appName("StructuredNetworkWordCount")
+      .master("local")
+      .config("spark.driver.bindAddress", "20000")
       .getOrCreate()
+
+    spark.conf.set("spark.sql.shuffle.partitions","5")
 
     import spark.implicits._
     // 创建表示从连接到 localhost:9999 的输入行 stream 的 DataFrame
@@ -29,7 +34,16 @@ object NetWordCountOffical {
       .format("console")
       .start()
 
-    query.awaitTermination()
+    //query.awaitTermination()
+
+    val sink  = new TestSink
+   val query2 =  wordCounts.writeStream
+      .outputMode("complete")
+      .foreach(sink)
+      .start()
+
+    query2.awaitTermination()
+
   }
 
 }

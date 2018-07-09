@@ -4,7 +4,7 @@ import java.util.{Calendar, Date}
 import org.apache.commons.lang3.time.{DateUtils, FastDateFormat}
 import org.slf4j.{Logger, LoggerFactory}
 
-object DateTimeUtils {
+object DateTimeUtilsV1 {
   @transient lazy val LOG: Logger = LoggerFactory.getLogger(this.getClass)
 
   val DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss"

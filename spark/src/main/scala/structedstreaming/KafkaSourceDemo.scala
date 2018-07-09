@@ -2,7 +2,7 @@ package structedstreaming
 
 import org.apache.spark.sql.SparkSession
 
-object KafkaSource {
+object KafkaSourceDemo {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder
@@ -21,18 +21,33 @@ object KafkaSource {
       .option("subscribe", "lancer_test_clickstream_topic")
       .load()
       //      .selectExpr("CAST(value AS STRING)")
-      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)", "topic", "partition", "offset", "timestamp", "timestampType")
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING) as v", "topic", "partition", "offset", "timestamp", "timestampType")
       .as[(String, String, String, String, String, String, String)]
+      .createOrReplaceTempView("t_log")
 
-    println(lines.schema)
+//    val r = spark.sql(
+//      """
+//        select count(1) as c, v from t_log
+//        group by v
+//        order by c desc
+//      """.stripMargin)
+
+    val r = spark.sql(
+      """
+        select count(topic) as c, topic from t_log
+        group by topic
+      """.stripMargin)
+
+
+
 
     // Generate running word count
     //    val wordCounts = lines.flatMap(_.split(" ")).groupBy("value").count()
 
     // Start running the query that prints the running counts to the console
-    val query = lines.writeStream
-      .outputMode("append")
-      //      .option("checkpointLocation","/mnt/disk/data/checkpoint/")
+    val query = r.writeStream
+      .outputMode("complete")
+      .option("checkpointLocation", "/mnt/disk/data/checkpoint/")
       .format("console")
       .start()
 
