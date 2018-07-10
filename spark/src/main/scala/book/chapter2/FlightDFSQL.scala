@@ -42,7 +42,6 @@ object FlightDFSQL {
     //下面两种情况等价
     //sqlWay.explain
     //dataFrameWay.explain
-
     //下面两种情况等价
     spark.sql("SELECT max(count) from flight_data_2015").take(1).foreach(println(_))
     import org.apache.spark.sql.functions.max

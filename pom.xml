@@ -14,5 +14,6 @@
         <module>kafka</module>
         <module>spark13</module>
         <module>phoenix</module>
+        <module>spark</module>
     </modules>
 </project>

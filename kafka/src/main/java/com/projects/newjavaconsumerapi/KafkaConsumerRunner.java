@@ -40,14 +40,19 @@ public class KafkaConsumerRunner implements Runnable {
         consumer.wakeup();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //autoCommitConsumer();
 
 
         Properties props = new Properties();
+<<<<<<< HEAD
         props.put("bootstrap.servers", Constant.MYVM_KAFKA_BROKER);
 //        props.put("bootstrap.servers", "10.1.50.122:9092,10.1.50.123:9092,10.1.50.124:9092");
         props.put("group.id", "downgrade_consumer03");
+=======
+        props.put("bootstrap.servers", "10.1.50.122:9092,10.1.50.123:9092,10.1.50.124:9092");
+        props.put("group.id", "cg-javaconsumerapi02");
+>>>>>>> refs/remotes/projects/master
         props.put("enable.auto.commit", "false");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
@@ -56,6 +61,7 @@ public class KafkaConsumerRunner implements Runnable {
         props.put("auto.offset.reset", "earliest");
         props.put("max.partition.fetch.bytes", "10485760");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+<<<<<<< HEAD
 
         consumer.subscribe(Arrays.asList("downgrade_topic"));
         final int minBatchSize = 200;
@@ -79,8 +85,32 @@ public class KafkaConsumerRunner implements Runnable {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+=======
+        consumer.subscribe(Arrays.asList("php_log_topic"));
+        final int minBatchSize = 200;
+        List<ConsumerRecord<String, String>> buffer = new ArrayList<ConsumerRecord<String, String>>();
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(10);
+            Thread.sleep(1000L);
+            for (ConsumerRecord<String, String> record : records) {
+                buffer.add(record);
+                System.out.println(record.key());
+                System.out.println(record.timestamp());
+                System.out.println(record.timestampType());
+                System.out.println(record.value());
             }
+            if(buffer.size() == 10){
+                break;
+>>>>>>> refs/remotes/projects/master
+            }
+//            if (buffer.size() >= minBatchSize) {
+//                //insertIntoDb(buffer);
+//                consumer.commitSync();
+//                buffer.clear();
+//            }
         }
+        System.out.println("buffer===================");
+        System.out.println(buffer);
 
         /**
          以上示例使用commitSync将所有收到的消息标记为已提交。 在某些情况下，您可能希望通过明确指定偏移量来更好地控制哪些消息已被提交。

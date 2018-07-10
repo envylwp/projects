@@ -11,7 +11,6 @@ object WordCount {
       .master("local")
         .config("spark.driver.bindAddress", "20000")
       .getOrCreate()
-
     import spark.implicits._
     val value = spark.sparkContext.textFile("src/main/resources/wc.txt")
       .map(_.split(" "))
@@ -19,7 +18,6 @@ object WordCount {
       .toDF()
     value.show()
     value.groupBy("name").count().show()
-
 
     spark.stop()
 

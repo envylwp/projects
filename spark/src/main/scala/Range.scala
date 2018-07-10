@@ -7,7 +7,6 @@ object Range {
       .builder
       .appName("StructuredNetworkWordCount")
       .master("local")
-      .config("spark.driver.bindAddress", "20000")
       .getOrCreate()
 
 

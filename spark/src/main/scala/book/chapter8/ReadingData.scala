@@ -14,12 +14,12 @@ object ReadingData {
       .getOrCreate()
 
     println("------------------------------read------------------------------------")
-    spark.read.format("csv")
-      .option("mode", "FAILFAST")
-      .option("inferSchema", "true")
-      .option("path", "path/to/file(s)")
-      .schema(null)
-      .load()
+//    spark.read.format("csv")
+//      .option("mode", "FAILFAST")
+//      .option("inferSchema", "true")
+//      .option("path", "path/to/file(s)")
+//      .schema(null)
+//      .load()
 
 
     println("------------------------------write------------------------------------")

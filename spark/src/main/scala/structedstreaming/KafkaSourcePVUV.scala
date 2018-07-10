@@ -6,7 +6,7 @@ import java.util
 import org.apache.commons.lang3.StringUtils
 import org.apache.flume.event.{JSONEvent, SimpleEvent}
 import org.apache.spark.sql.SparkSession
-import utils.DateTimeUtils
+import utils.{DateTimeUtilsV1, KafkaUtilsV1}
 
 
 case class PVUV2(time: String,
@@ -39,6 +39,8 @@ object KafkaSourcePVUV {
   case class MyEvent(body: String, headers: util.Map[String, String])
 
   def main(args: Array[String]): Unit = {
+
+
     val spark = SparkSession
       .builder
       .appName("StructuredNetworkWordCount")
@@ -74,48 +76,61 @@ object KafkaSourcePVUV {
         tag: String,
         uip: String,
         domain: String,
-        DateTimeUtils.parseToTimeStamp(exec_datetime)
+        DateTimeUtilsV1.parseToTimeStamp(exec_datetime)
       )
     }).createOrReplaceTempView("click_stream_log")
 
 
+    val t  = "tiqianle"
+    val f  = "fenqile"
+
+
     val domain = spark.sql(
-      """
+      s"""
           select
           SUBSTR(time,12,5) as  exec_hhmm, SUBSTR(time,1,10) as exec_date, tag,
-          case when domain like '%ttttt%' then 'ttttt' else 'fffff' end as bus_type, domain, count(1) pv
+          case when domain like '%$t%' then '$t' else '$f' end as bus_type, domain, count(1) pv
           from click_stream_log
-          where ( domain like '%fffff%' or domain like '%ttttt%' ) and domain not like '%hot'
-          group by SUBSTR(time,12,5) ,SUBSTR(time,1,10),tag, case when domain like '%ttttt%' then 'ttttt' else 'fffff' end ,domain
+          where ( domain like '%$f%' or domain like '%$t%' ) and domain not like '%hot'
+          group by SUBSTR(time,12,5) ,SUBSTR(time,1,10),tag, case when domain like '%$t%' then '$t' else '$f' end ,domain
       """.stripMargin)
+//      .as[PVUVMid].createOrReplaceTempView("click_stream_log_mid")
 
 
     val busType = spark.sql(
-      """
+      s"""
         select SUBSTR(time,12,5) as exec_hhmm, SUBSTR(time,1,10) as exec_date, tag,
-        case when domain like '%ttttt%' then 'ttttt' else 'fffff' end as bus_type,
+        case when domain like '%$t%' then '$t' else '$f' end as bus_type,
         'ALL' domain, count(1) pv
         from click_stream_log
-        where( domain like '%fffff%' or domain like '%ttttt%' ) and domain not like '%hot'
-        group by SUBSTR(time,12,5) ,SUBSTR(time,1,10) ,tag, case when domain like '%ttttt%' then 'ttttt' else 'fffff' end
+        where( domain like '%$f%' or domain like '%$t%' ) and domain not like '%hot'
+        group by SUBSTR(time,12,5) ,SUBSTR(time,1,10) ,tag, case when domain like '%$t%' then '$t' else '$f' end
       """.stripMargin)
+//      .as[PVUVMid].createOrReplaceTempView("click_stream_log_mid_2")
+//
+//    val all = spark.sql(
+//      """
+//        select  SUBSTR(time,12,5) as exec_hhmm, SUBSTR(time,1,10) as exec_date, tag,
+//        'ALL' as bus_type, 'ALL' as domain, count(1) pv
+//        from click_stream_log
+//        where ( domain like '%fffff%' or domain like '%ttttt%' ) and domain not like '%hot'
+//        group by  SUBSTR(time,12,5) ,SUBSTR(time,1,10) ,tag
+//      """.stripMargin).as[PVUVMid].createOrReplaceTempView("click_stream_log_mid")
 
-    val all = spark.sql(
-      """
-        select  SUBSTR(time,12,5) as exec_hhmm, SUBSTR(time,1,10) as exec_date, tag,
-        'ALL' as bus_type, 'ALL' as domain, count(1) pv
-        from click_stream_log
-        where ( domain like '%fffff%' or domain like '%ttttt%' ) and domain not like '%hot'
-        group by  SUBSTR(time,12,5) ,SUBSTR(time,1,10) ,tag
-      """.stripMargin).as[PVUVMid].createOrReplaceTempView("click_stream_log_mid")
 
+//   val mid =  spark.sql(
+//      """
+//             select exec_hhmm,exec_date,bus_type, domain, sum(pv) as pv, count(distinct tag) as uv, now() as etl_time
+//        from click_stream_log_mid
+//        group by exec_hhmm, exec_date, bus_type, domain
+//      """.stripMargin)
+//    val mid =  spark.sql(
+//      """
+//             select *
+//        from click_stream_log_mid
+//      """.stripMargin)
 
-   val mid =  spark.sql(
-      """
-             select exec_hhmm,exec_date,bus_type, domain, sum(pv) as pv, count(distinct tag) as uv, now() as etl_time
-        from click_stream_log_mid
-        group by exec_hhmm, exec_date, bus_type, domain
-      """.stripMargin)
+    val mid =domain.union(busType)
 
 
     val query = mid.writeStream.format("console").outputMode("complete").start()

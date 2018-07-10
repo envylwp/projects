@@ -11,8 +11,8 @@ object SparkSessionDemo {
       .getOrCreate()
 
 
-    import org.apache.spark.SparkContext
-    val sc = SparkContext.getOrCreate()
+//    import org.apache.spark.SparkContext
+//    val sc = SparkContext.getOrCreate()
 
     println(spark.sparkContext)
   }

@@ -11,6 +11,8 @@ class TestSink extends ForeachWriter[Row]{
 
   override def process(row: Row): Unit = {
     println("====  process  ====")
+    println(row.get(0))
+    println(row.get(1))
 
   }
   override def close(errorOrNull: Throwable): Unit = {
