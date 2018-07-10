@@ -45,53 +45,62 @@ public class KafkaConsumerRunner implements Runnable {
 
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", Constant.KAFAK_BROKER);
-        props.put("group.id", "cg-javaconsumerapi02");
+        props.put("bootstrap.servers", Constant.MYVM_KAFKA_BROKER);
+//        props.put("bootstrap.servers", "10.1.50.122:9092,10.1.50.123:9092,10.1.50.124:9092");
+        props.put("group.id", "downgrade_consumer03");
         props.put("enable.auto.commit", "false");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
+        props.put("max.partition.fetch.bytes", "10485760");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-        consumer.subscribe(Arrays.asList("test_ts2_topic"));
+
+        consumer.subscribe(Arrays.asList("downgrade_topic"));
         final int minBatchSize = 200;
         List<ConsumerRecord<String, String>> buffer = new ArrayList<ConsumerRecord<String, String>>();
         while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(100);
-            for (ConsumerRecord<String, String> record : records) {
-                buffer.add(record);
-                System.out.println(record.key());
-                System.out.println(record.timestamp());
-                System.out.println(record.timestampType());
-                System.out.println(record.value());
-            }
-            if (buffer.size() >= minBatchSize) {
-                //insertIntoDb(buffer);
-                consumer.commitSync();
-                buffer.clear();
+            try {
+
+
+                ConsumerRecords<String, String> records = consumer.poll(100);
+                for (ConsumerRecord<String, String> record : records) {
+                    buffer.add(record);
+                    // System.out.println(record.key());
+//                System.out.println(record.timestamp());
+//                System.out.println(record.timestampType());
+                    System.out.println(record.value());
+                }
+                if (buffer.size() >= minBatchSize) {
+                    //insertIntoDb(buffer);
+                    consumer.commitSync();
+                    buffer.clear();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         /**
-        以上示例使用commitSync将所有收到的消息标记为已提交。 在某些情况下，您可能希望通过明确指定偏移量来更好地控制哪些消息已被提交。
+         以上示例使用commitSync将所有收到的消息标记为已提交。 在某些情况下，您可能希望通过明确指定偏移量来更好地控制哪些消息已被提交。
          在下面的例子中，我们在完成处理每个分区中的消息之后提交offset。
 
-        try {
-            while(running) {
-                ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
-                for (TopicPartition partition : records.partitions()) {
-                    List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
-                    for (ConsumerRecord<String, String> record : partitionRecords) {
-                        System.out.println(record.offset() + ": " + record.value());
-                    }
-                    long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
-                    consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
-                }
-            }
-        } finally {
-            consumer.close();
-        }
+         try {
+         while(running) {
+         ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+         for (TopicPartition partition : records.partitions()) {
+         List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
+         for (ConsumerRecord<String, String> record : partitionRecords) {
+         System.out.println(record.offset() + ": " + record.value());
+         }
+         long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
+         consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
+         }
+         }
+         } finally {
+         consumer.close();
+         }
          */
     }
 

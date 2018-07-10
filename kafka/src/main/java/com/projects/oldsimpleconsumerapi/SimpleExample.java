@@ -20,7 +20,8 @@ import java.util.*;
 public class SimpleExample {
     public static void main(String args[]) {
 
-        args = new String[]{"100", "test02_topic", "0", "192.168.18.101", "9092"};
+//        args = new String[]{"100", "test02_topic", "0", "192.168.18.101", "9092"};
+        args = new String[]{"100", "DBA_elk_service_topic", "0", "10.1.50.124", "9092"};
 
         SimpleExample example = new SimpleExample();
         long maxReads = Long.parseLong(args[0]);

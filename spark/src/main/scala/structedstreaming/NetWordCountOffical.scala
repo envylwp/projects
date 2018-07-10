@@ -7,13 +7,15 @@ object NetWordCountOffical {
     val spark = SparkSession
       .builder
       .appName("StructuredNetworkWordCount")
+      .master("local")
+      //.config("spark.driver.bindAddress", "20000")
       .getOrCreate()
 
     import spark.implicits._
     // 创建表示从连接到 localhost:9999 的输入行 stream 的 DataFrame
     val lines = spark.readStream
       .format("socket")
-      .option("host", "localhost")
+      .option("host", "192.168.18.88")
       .option("port", 9999)
       .load()
 
