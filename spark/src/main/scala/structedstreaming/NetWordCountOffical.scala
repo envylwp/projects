@@ -9,11 +9,7 @@ object NetWordCountOffical {
       .builder
       .appName("StructuredNetworkWordCount")
       .master("local")
-<<<<<<< HEAD
-      //.config("spark.driver.bindAddress", "20000")
-=======
       .config("spark.driver.bindAddress", "20000")
->>>>>>> refs/remotes/projects/master
       .getOrCreate()
 
     spark.conf.set("spark.sql.shuffle.partitions","5")

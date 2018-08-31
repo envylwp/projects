@@ -4,20 +4,18 @@ import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SparkSession}
-import utils.{DateTimeUtilsV1, GsonUtils, JsonEvnet, MyKafkaUtils}
+import utils._
 
 import scala.collection.JavaConverters
 
 object KafkaSparkDemo1 {
 
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession
-      .builder
-      .appName("kafkaConsumer")
-      .master("local")
-      .config("spark.driver.bindAddress", "20000")
-      .getOrCreate()
 
+    MySparkUtils.init
+    val spark = MySparkUtils.spark
+
+    println(spark)
     val list = MyKafkaUtils.consumer()
     println(list.get(0))
     println(list.get(0).value())
