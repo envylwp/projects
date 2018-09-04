@@ -15,5 +15,6 @@
         <module>spark13</module>
         <module>phoenix</module>
         <module>spark</module>
+        <module>scalademo</module>
     </modules>
 </project>
